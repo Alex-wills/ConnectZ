@@ -2,13 +2,18 @@ import sys
 
 from Tic_Tac_Toe import Board, Player
 
+'''
+A function that takes a file as an argument and collects the necessary data about the file to play a game of ConnectZ.
+It returns the dimensions of the inputted text file or if not valid will return the appropriate error code.
+'''
 
-def read_file(file):
-    move_set = []
+
+def read_file(input_file):
+    mov_set = []
     dimensions = ''
 
     try:
-        with open(file, 'r') as f:
+        with open(input_file, 'r') as f:
             contents = f.readlines()
     except FileNotFoundError:
         file_error()
@@ -26,7 +31,7 @@ def read_file(file):
                     continue
 
                 mov = int(line.replace("\n", ""))
-                move_set.append(mov)
+                mov_set.append(mov)
             except (ValueError, IndexError):
                 invalid_file()
             else:
@@ -36,7 +41,12 @@ def read_file(file):
     if len(contents) == 1:
         illegal_game()
 
-    return dimensions, move_set
+    return dimensions, mov_set
+
+
+'''
+This class inherits the Board class from Tic_Tac_Toe and also uses it's Player class in its implementation.
+'''
 
 
 class Game(Board):
@@ -46,7 +56,8 @@ class Game(Board):
         self.p1 = player1.sign
         self.p2 = player2.sign
 
-    # target possible fields
+    ''' targets columns with an empty field in and returns a list of them'''
+
     def list_of_valid_cols(self):
         valid_cols = []
 
@@ -57,6 +68,8 @@ class Game(Board):
 
         return valid_cols
 
+    ''' targets completely empty columns and returns a list of them'''
+
     def list_of_empty_cols(self):
         empty_cols = []
 
@@ -66,6 +79,11 @@ class Game(Board):
                 empty_cols.append(column)
 
         return empty_cols
+
+    ''' A method that changes the Board accordingly with the user's move made and sign used. 
+    It outputs a tuple of the moves' position which can be utilised in checking if 
+    that move was the winning move. if invalid input then it prints the relevant error code. 
+    '''
 
     def make_move(self, player, move):
 
@@ -96,6 +114,11 @@ class Game(Board):
             illegal_row()
 
         return move
+
+    '''
+    A method that takes the player and their move made to determine whether the game has been won yet.
+    If one of the conditions for a win is met then the method returns True otherwise False.
+    '''
 
     def check_win(self, player, move_made):
 
@@ -168,12 +191,10 @@ class Game(Board):
                     except AssertionError:
                         return False
 
-
             if ctr == self.z:
                 return True
             else:
                 return False
-
 
         if check('pd') or check('nd') or check('horizontal') or check('vertical'):
             return True
@@ -181,6 +202,10 @@ class Game(Board):
             return False
 
 
+'''
+The following functions are simply output functions that when triggered, 
+the appropriate code is outputted into the terminal.
+'''
 
 
 def draw():
@@ -228,6 +253,9 @@ def file_error():
     raise TypeError
 
 
+'''
+This method runs the game inputting the file's contents into the relevant Game class methods.
+'''
 if __name__ == '__main__':
     p1 = Player('1')
     p2 = Player('2')
@@ -245,7 +273,6 @@ if __name__ == '__main__':
         win1 = False
         win2 = False
 
-
         for count in range(len(move_set)):
 
             try:
@@ -257,7 +284,6 @@ if __name__ == '__main__':
                         arena.make_move(p1, move_set[count])
                     else:
                         arena.make_move(p2, move_set[count])
-
 
                 else:
 
@@ -277,12 +303,12 @@ if __name__ == '__main__':
                 break
 
             # Illegal continue
-            if complete == True and count != len(move_set) - 1:
+            if complete is True and count != len(move_set) - 1:
                 illegal_continue_check()
                 break
 
             # Draw
-            if arena.list_of_valid_cols() == []:
+            if not arena.list_of_valid_cols():
                 draw()
                 break
 
@@ -297,6 +323,6 @@ if __name__ == '__main__':
                 break
 
             # Incomplete
-            if complete == False and count == len(move_set) - 1:
+            if complete is False and count == len(move_set) - 1:
                 incomplete_check()
                 break

@@ -63,7 +63,7 @@ columns but the move is for a column that is already full due to
 previous moves.
 
 6: The file conforms to the format but contains a move for a column
-that is out side the dimensions of the board. i.e. the column
+that is outside the dimensions of the board. i.e. the column
 selected is greater than X
 
 7: The file conforms to the format but the dimensions describe a game that can never be won.
@@ -71,7 +71,24 @@ selected is greater than X
 8: The file is opened but does not conform the format.
 
 9: The file can not be found, opened or read for some reason.
+<br>
+<br>
 
+## Intuition
+
+The idea behind the search for the victory condition is to only scan the last move's
+possible victory sequence to make it efficient and only scan a minimum amount of 
+necessary squares. For example for the horizontal search; wherever the move is made 
+the check_win() method will scan right to see if it encounters consecutive player's
+signs/counters, until it reaches outside the board or to a space where one of their 
+counters is not present. Then it will scan in the opposite direction of the original 
+move to see if it can find the remaining consecutive counters needed for a win.
+If it does not find the necessary amount, it will check the other directions 
+(vertical, positive diagonal, etc.) and finally return True or False.
+
+
+
+<br>
 
 ## Excecution
 To run this program type into the terminal of the ConnectZ file:
